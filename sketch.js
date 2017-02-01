@@ -1,5 +1,5 @@
 var apiKey = '344d4b334ad5ccdeb595ca6505104d97';
-var rootURL = 'http://ws.audioscrobbler.com/2.0/';
+var rootURL = 'https://ws.audioscrobbler.com/2.0/';
 var tracks = [];
 var account = "ianmroberts";
 
