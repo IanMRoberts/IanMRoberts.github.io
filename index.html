@@ -1,35 +1,18 @@
 <html>
 <head>
+
   <meta charset="UTF-8">
 
-  <script src="jquery-3.1.1.min.js"></script
-  <script language="javascript" type="text/javascript" src="libraries/p5.js"></script>
-  <!-- uncomment lines below to include extra p5 libraries -->
-  <script language="javascript" src="libraries/p5.dom.js"></script>
-  <!--<script language="javascript" src="libraries/p5.sound.js"></script>-->
-  <script language="javascript" type="text/javascript" src="sketch.js"></script>
-  <!-- this line removes any default padding and style. you might only need one of these values set. -->
-  <style> body {padding: 0; margin: 0;} </style>
-
-
-  <div id="container">
-    <style>
-      #graph-container {
-        top: 0;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        position: absolute;
-      }
-    </style>
-    <div id="graph-container"></div>
-  </div>
-  <script src="sigma.min.js"></script>
-  <script src="vis.js"></script>
-
+  <script src="jquery-3.1.1.min.js"></script>
+  <script src="https://momentjs.com/downloads/moment-with-locales.min.js"></script>
+  <script src="http://d3js.org/d3.v4.min.js"></script>
+  <script language="javascript" type="text/javascript" src="Functions.js"></script>
 
 </head>
 
-<body>
-</body>
+<div id="graph" style="height: 900px; width: 1100px; float: left;"></div>
+<div id="BarGraph" style="height: 900px; width: 300px; float:left;" ></div>
+
+<script language="javascript" type="text/javascript" src="main.js"></script>
+
 </html>
