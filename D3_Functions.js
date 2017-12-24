@@ -186,7 +186,7 @@ function D3_barGraph(Data,ValueId,LableId,CanvasScale,Container){
                         .data(Data) // import the data into d3
                         .enter() // create place holders
                         .append("text")
-                        .text(function(d){return (d[LableId]+"     Plays: "+d[ValueId]);})
+                        .text(function(d){return (d[LableId]+"\t\t\tPlays: "+d[ValueId]);})
 
                         .attr("width",function(d){return HightScale(d[ValueId]);})
                         .attr("x",function(d){return 0;})
