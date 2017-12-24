@@ -8,12 +8,28 @@
   <script src="https://d3js.org/d3.v4.min.js"></script>
   <script language="javascript" type="text/javascript" src="Functions.js"></script>
   <script language="javascript" type="text/javascript" src="D3_Functions.js"></script>
+  <script language="javascript" type="text/javascript" src="main.js"></script>
 
 </head>
+<div id="Input" style="height: 20px; width: 1100px;">
+<label style="font-family:verdana"> Start Date <input type="text" id="StartDate" size = "7"
+  value = ""/></label>
 
-<div id="graph" style="height: 900px; width: 1100px; float: left;"></div>
-<div id="BarGraph" style="height: 900px; width: 300px; float:left;" ></div>
+<label style="font-family:verdana"> End Date <input type="text" id="EndDate" size = "7"
+  value = ""/></label>
 
-<script language="javascript" type="text/javascript" src="main.js"></script>
+<script>
+  Dates = getWeek(0)
+  d3.select("#StartDate")
+    .attr("value",Dates[0].format('YYYY-MM-DD'))
+  d3.select("#EndDate")
+    .attr("value",Dates[1].format('YYYY-MM-DD'))
+</script>
+
+<label style="font-family:verdana; margin-left: 1cm"> LastFm User Name <input type="text" id="UserName" size = "20" value = "User Name"/></label>
+
+<button type="button" onclick="Go()">Go</button>
+
+</div>
 
 </html>

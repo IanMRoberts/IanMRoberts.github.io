@@ -1,13 +1,14 @@
 // main bubble graph function
 function D3_BubbleGraph(Container){
   // graph properties
-  this.Width = 1100; // width of svg
-  this.Height = 900; // height of svg
+  this.Width = document.getElementById(Container.replace("#","")).offsetWidth; // width of svg
+  this.Height = document.getElementById(Container.replace("#","")).offsetHeight; // height of svg
   this.SinkStrength = 0.02; // strength of the force pulling the bubbles to the center
   this.Elements = []; // where the data is stored
   this.maxRadius = 30 // maixmum radius of bubbles
   this.minRadius = 0.25 // minimum rdiues is equal to this * maxRadius
   this.BarGraphContainer = "#BarGraph"
+  this.Tracks = [];
 
   this.RadiusScale
   this.L = 0; // used to scale the bubbles
@@ -15,8 +16,8 @@ function D3_BubbleGraph(Container){
   // the d3 force simulation
   this.simulation = d3.forceSimulation(this.Elements)
     // the forces puuling the bubbles to the center
-    .force("xSink",d3.forceX(this.Width/2).strength(this.SinkStrength))
-    .force("ySink",d3.forceY(this.Height/2).strength(this.SinkStrength*3));
+    .force("xSink",d3.forceX(this.Width/2).strength(this.SinkStrength*this.Height/this.Width))
+    .force("ySink",d3.forceY(this.Height/2).strength(this.SinkStrength*this.Width/this.Height));
 
   // create the SGV container
   this.svg = d3.select(Container)
@@ -28,6 +29,7 @@ function D3_BubbleGraph(Container){
 
   this.BarGraph = d3.select(this.BarGraphContainer)
     .style("font-size", "30px")
+    .style("font-family","verdana")
     .text("");
 
     this.defs = this.svg.append("defs")
@@ -62,15 +64,18 @@ D3_BubbleGraph.prototype.Update = function (){
   // store local with and hights of the svg
   W = this.Width;
   H = this.Height;
+  if (W >= H) {
+    dim = H;
+  } else {
+    dim = W;
+  }
   // L is a scalling factor used to scale the radius of the bubbles when theres lots of data
   this.L = this.Elements.length+1;
-  while (Math.floor(H*this.maxRadius/this.L) > H/10){
-    this.L += 30;
-  };
+
   // get the min and max of the data
   domain = d3.extent(this.Elements, function(d) { return d.Value; })
   // create the radius scale
-  RadiusScale = d3.scaleLog().domain(domain).range([Math.floor(H*this.maxRadius*this.minRadius/this.L),Math.floor(H*this.maxRadius/this.L)]);
+  RadiusScale = d3.scaleLog().domain(domain).range([Math.floor(dim*this.minRadius/Math.sqrt(this.L)),Math.floor(dim/Math.sqrt(this.L))]);
   this.RadiusScale = RadiusScale;
   // add the bubbles
   this.Bubbles = this.svg.selectAll(".bubbles")
@@ -96,9 +101,9 @@ D3_BubbleGraph.prototype.Update = function (){
 
     function MouseClick(GraphObj) {
      return function(d) {
-       d3.select(this).attr("r",RadiusScale(domain[1]+2)).moveToFront();
+       d3.select(this).attr("r",RadiusScale(domain[1]+100)).moveToFront();
        GraphObj.BarGraph.text(d.Label);
-       ArtistSongs = SongPlayCount(d.Label,downloaded);
+       ArtistSongs = SongPlayCount(d.Label,GraphObj.Tracks,0);
        D3_barGraph(ArtistSongs,"PlayCount","SongName",100,GraphObj.BarGraphContainer)
       };
    };

@@ -68,9 +68,6 @@ function ArtistPlayCount(tracks) {
 };
 
 function SongPlayCount(Artist,tracks,ImageSize) {
-  console.log(Artist)
-  console.log(tracks)
-
   var SongNames = [];
   var Songs = [];
   for (i = 0; i < tracks.length; i++){
@@ -89,7 +86,6 @@ function SongPlayCount(Artist,tracks,ImageSize) {
       };
     };
   };
-  //console.log(artistStats);
   return Songs;
 };
 
@@ -125,5 +121,6 @@ function GetImages(Artists,Size) {
 function dataLoaded(tracks) {
   artistStats = ArtistPlayCount(tracks);
   var Data = [];
+  Graph.Tracks = tracks;
   GetImages(artistStats,2)
 };

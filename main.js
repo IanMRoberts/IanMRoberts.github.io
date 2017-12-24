@@ -1,14 +1,41 @@
 var apiKey = '344d4b334ad5ccdeb595ca6505104d97';
 var rootURL = 'https://ws.audioscrobbler.com/2.0/';
-var downloaded = [];
-var week2 = [];
-var account = "ianmroberts";
+//var account = "ianmroberts";
 
-dates = getWeek(0)
-console.log(dates)
+function Go(){
+  if (document.getElementById("UserName").value == "User Name"){
+    console.log("Please enter a user name")
+  }
+  else {
+    if (document.getElementById("graph")){
+      console.log("Bubble Graph exists")
+      var elem = document.getElementById("graph")
+      elem.parentNode.removeChild(elem);
+    }
+    if (document.getElementById("BarGraph")){
+      console.log("Bar Graph exists")
+      var elem = document.getElementById("BarGraph")
+      elem.parentNode.removeChild(elem);
+    }
+  var W = $(window).width()
+  var H = $(window).height()
+  d3.select("body")
+    .append("div")
+    .attr("id","graph")
+    .style("height",H)
+    .style("width",Math.floor(W*3/4))
+    .style("float","left");
+  d3.select("body")
+    .append("div")
+    .attr("id","BarGraph")
+    .style("height",H)
+    .style("width",Math.floor(W*2/12))
+    .style("float","left");
 
-var Graph = new D3_BubbleGraph("#graph")
+  Graph = new D3_BubbleGraph("#graph")
+  downloaded = [];
 
-getTracks(account,downloaded,dates[0],dates[1],1)
-
-//getTracks(account,downloaded,moment("2017-12-16"),moment("2017-12-22"),1)
+  dates = [moment(document.getElementById("StartDate").value),moment(document.getElementById("EndDate").value)]
+  getTracks(document.getElementById("UserName").value,downloaded,dates[0],dates[1],1)
+  }
+}
