@@ -96,6 +96,7 @@ D3_BubbleGraph.prototype.Update = function (){
     .attr("cx", function(d) { return Math.floor(Math.random()*W); } )
     .attr("cy", function(d) { return Math.floor(Math.random()*W); } )
     // functions for tooltips and interaction
+    .on("mouseover",MouseOver(this))
     .on("click", MouseClick(this))
     .on("mouseleave", function(d) {d3.select(this).attr("r",RadiusScale(d.Value));} );
 
@@ -107,6 +108,13 @@ D3_BubbleGraph.prototype.Update = function (){
        D3_barGraph(ArtistSongs,"PlayCount","SongName",100,GraphObj.BarGraphContainer)
       };
    };
+   function MouseOver(GraphObj) {
+    return function(d) {
+      GraphObj.BarGraph.text(d.Label);
+      ArtistSongs = SongPlayCount(d.Label,GraphObj.Tracks,0);
+      D3_barGraph(ArtistSongs,"PlayCount","SongName",100,GraphObj.BarGraphContainer)
+     };
+  };
 };
 
 // function for updating the force simulation when new data is added
@@ -178,7 +186,7 @@ function D3_barGraph(Data,ValueId,LableId,CanvasScale,Container){
                         .data(Data) // import the data into d3
                         .enter() // create place holders
                         .append("text")
-                        .text(function(d){return d[LableId];})
+                        .text(function(d){return (d[LableId]+"     Plays: "+d[ValueId]);})
 
                         .attr("width",function(d){return HightScale(d[ValueId]);})
                         .attr("x",function(d){return 0;})
