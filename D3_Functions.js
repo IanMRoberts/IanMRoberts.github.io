@@ -25,7 +25,11 @@ function D3_BubbleGraph(Container){
     .attr("width",this.Width)
     .attr("height",this.Height)
     .append("g");
-    //.attr("transform","translate("+this.Width/2+","+this.Height/2+")");
+
+  this.ToolTip = d3.select("#ToolTip")
+    .style("font-size", "20px")
+    .style("font-family","verdana")
+    .text("");
 
   this.BarGraph = d3.select(this.BarGraphContainer)
     .style("font-size", "30px")
@@ -87,7 +91,6 @@ D3_BubbleGraph.prototype.Update = function (){
     .attr("r", function(d) {return RadiusScale(d.Value); } )
     .attr("fill",function(d) {
       if (typeof d.Url === 'undefined') {
-        console.log(d.Color)
         return d.Color;
       } else {
         return "url(#" + d.ImageID + ")"
@@ -105,14 +108,12 @@ D3_BubbleGraph.prototype.Update = function (){
        d3.select(this).attr("r",dim/6).moveToFront();
        GraphObj.BarGraph.text(d.Label);
        ArtistSongs = SongPlayCount(d.Label,GraphObj.Tracks,0);
-       D3_barGraph(ArtistSongs,"PlayCount","SongName",100,GraphObj.BarGraphContainer)
+       D3_barGraph(ArtistSongs,"PlayCount","SongName",GraphObj.BarGraphContainer)
       };
    };
    function MouseOver(GraphObj) {
     return function(d) {
-      GraphObj.BarGraph.text(d.Label);
-      ArtistSongs = SongPlayCount(d.Label,GraphObj.Tracks,0);
-      D3_barGraph(ArtistSongs,"PlayCount","SongName",100,GraphObj.BarGraphContainer)
+      GraphObj.ToolTip.text(d.Label);
      };
   };
 };
@@ -139,7 +140,7 @@ D3_BubbleGraph.prototype.Force = function () {
 }
 
 
-function D3_barGraph(Data,ValueId,LableId,CanvasScale,Container){
+function D3_barGraph(Data,ValueId,LableId,Container){
   // get factors for scaling the graph to the page
   var W = document.getElementById(Container.replace("#","")).offsetWidth;
   var H = document.getElementById(Container.replace("#","")).offsetHeight-100;
@@ -147,13 +148,9 @@ function D3_barGraph(Data,ValueId,LableId,CanvasScale,Container){
   Domain = d3.extent(Data, function(d) { return d[ValueId]; })
   // create scales
   WidthScale = d3.scaleLinear()
-                    .domain([0,Data.length])
+                    .domain([0,30])
                     .range([0,H]);
-  if (WidthScale(1) > H/20) {
-    WidthScale = d3.scaleLinear()
-                      .domain([0,20])
-                      .range([0,H]);
-  }
+
   HightScale = d3.scaleLinear()
                       .domain([0,Domain[1]])
                       .range([0,W]);
@@ -166,7 +163,7 @@ function D3_barGraph(Data,ValueId,LableId,CanvasScale,Container){
   var canvas = d3.select(Container)
                   .append("svg")
                   .attr("width",W)
-                  .attr("height",H);
+                  .attr("height",WidthScale(Data.length));
   // create the bars
   //canvas.selectAll("rect").data(Data).exit().remove()
   var bars = canvas.selectAll("rect")
@@ -178,7 +175,7 @@ function D3_barGraph(Data,ValueId,LableId,CanvasScale,Container){
                       .attr("x",function(d){return 0;})
 
                       .attr("y",function(d,i){return WidthScale(i);})
-                      .attr("height",WidthScale(1-0.1))
+                      .attr("height",WidthScale(0.9))
 
                       .attr("fill","#e2e2e2");
 
@@ -186,14 +183,13 @@ function D3_barGraph(Data,ValueId,LableId,CanvasScale,Container){
                         .data(Data) // import the data into d3
                         .enter() // create place holders
                         .append("text")
-                        .text(function(d){return (d[LableId]+"\t\t\tPlays: "+d[ValueId]);})
+                        .text(function(d){return (d[LableId]+", Plays: "+d[ValueId]);})
 
                         .attr("width",function(d){return HightScale(d[ValueId]);})
                         .attr("x",function(d){return 0;})
-
-                        .attr("y",function(d,i){return WidthScale(i+0.6);})
-                        .attr("height",WidthScale(1))
-                        .style("font-size",function() { if (WidthScale(0.8) < 18) {return WidthScale(0.8)+"px";} else {return "18px";} })
+                        .attr("height",WidthScale(0.8))
+                        .style("font-size",function(d) { if (W/this.getComputedTextLength()*30 < WidthScale(0.6)) {return W/this.getComputedTextLength()*30  + "px";} else {return WidthScale(0.6)+ "px";} })
+                        .attr("y",function(d,i){return WidthScale(i+1)-(WidthScale(.8)-this.style.fontSize.replace("px",""))-WidthScale(0.1);})
                         .attr("fill","#050000");
 };
 

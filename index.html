@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
 
   <script src="jquery-3.1.1.min.js"></script>
+  <script src="jquery.quickfit.js"></script>
   <script src="https://momentjs.com/downloads/moment-with-locales.min.js"></script>
   <script src="https://d3js.org/d3.v4.min.js"></script>
   <script language="javascript" type="text/javascript" src="Functions.js"></script>
@@ -26,10 +27,11 @@
     .attr("value",Dates[1].format('YYYY-MM-DD'))
 </script>
 
-<label style="font-family:verdana; margin-left: 1cm"> LastFm User Name <input type="text" id="UserName" size = "20" value = "User Name"/></label>
+<label style="font-family:verdana; margin-left: 1cm"> LastFm User Name <input type="text" id="UserName" size = "20" value = ""/></label>
 
 <button type="button" onclick="Go()">Go</button>
 
 </div>
-
+<div id="ToolTip" style="height: 30px; width: 1100px;">
+</div>
 </html>
