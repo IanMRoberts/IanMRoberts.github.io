@@ -102,7 +102,7 @@ D3_BubbleGraph.prototype.Update = function (){
 
     function MouseClick(GraphObj) {
      return function(d) {
-       d3.select(this).attr("r",RadiusScale(domain[1]+100)).moveToFront();
+       d3.select(this).attr("r",dim/5).moveToFront();
        GraphObj.BarGraph.text(d.Label);
        ArtistSongs = SongPlayCount(d.Label,GraphObj.Tracks,0);
        D3_barGraph(ArtistSongs,"PlayCount","SongName",100,GraphObj.BarGraphContainer)
