@@ -6,16 +6,19 @@ function getTracks(user,tracks,start,end,page) {
     // load the page attributes sent by last.fm
     var attr = data.recenttracks['@attr'];
 
+    // if its the first page don't push the first song as it could be
+    // currently playing
+    if (parseInt(attr.page) == 1) {
       // push the tracks to the track list
-    for (i = 0; i< parseInt(data.recenttracks.track.length); i++) {
-      if (parseInt(attr.page) == 1) {
-        if (typeof data.recenttracks.track[i]['@attr'] !== 'undefined'){
-          console.log(data.recenttracks.track[i]);
-        } else {
-          tracks.push(data.recenttracks.track[i]);
-        };
-      };
-    };
+      for (i = 1; i < parseInt(data.recenttracks.track.length); i++) {
+      tracks.push(data.recenttracks.track[i]);
+      }
+    } else {
+      // push the tracks to the track list
+      for (i = 0; i< parseInt(data.recenttracks.track.length); i++) {
+      tracks.push(data.recenttracks.track[i]);
+      }
+    }
     if (parseInt(attr.page) == parseInt(attr.totalPages)) {
       //console.log(tracks);
       dataLoaded(tracks);
