@@ -104,7 +104,8 @@ D3_BubbleGraph.prototype.Update = function (){
      return function(d) {
        d3.select(this).attr("r",RadiusScale(domain[1]+100)).moveToFront();
        GraphObj.BarGraph.text(d.Label);
-       D3_barGraph([{}],"PlayCount","SongName",100,GraphObj.BarGraphContainer)
+       ArtistSongs = SongPlayCount(d.Label,GraphObj.Tracks,0);
+       D3_barGraph(ArtistSongs,"PlayCount","SongName",100,GraphObj.BarGraphContainer)
       };
    };
    function MouseOver(GraphObj) {
