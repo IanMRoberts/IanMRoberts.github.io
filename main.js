@@ -1,6 +1,5 @@
 var apiKey = '344d4b334ad5ccdeb595ca6505104d97';
 var rootURL = 'https://ws.audioscrobbler.com/2.0/';
-//var account = "ianmroberts";
 
 function Go(){
   if (document.getElementById("UserName").value == "User Name"){
