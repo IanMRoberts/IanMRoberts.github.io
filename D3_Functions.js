@@ -24,7 +24,14 @@ function D3_BubbleGraph(Container){
     .append("svg")
     .attr("width",this.Width)
     .attr("height",this.Height)
+    .call(d3.zoom().on("zoom",Zoom(this)))
     .append("g");
+
+    function Zoom(GraphObj){
+      return function () {
+        GraphObj.svg.attr("transform", d3.event.transform)
+      };
+    }
 
   this.ToolTip = d3.select("#ToolTip")
     .style("font-size", "20px")
