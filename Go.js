@@ -30,6 +30,8 @@ function Go(){
     .style("height",H)
     .style("width",Math.floor(W*1/4))
     .style("float","left");
+  d3.select("#ToolTip")
+    .style("width",Math.floor(W*3/4));
 
   Graph = new D3_BubbleGraph("#graph")
   downloaded = [];
@@ -37,4 +39,9 @@ function Go(){
   dates = [moment(document.getElementById("StartDate").value),moment(document.getElementById("EndDate").value)]
   getTracks(document.getElementById("UserName").value,downloaded,dates[0],dates[1],1)
   }
+}
+
+function Search() {
+  SearchTerm = document.getElementById("SearchInput").value;
+  Graph.Search(SearchTerm);
 }

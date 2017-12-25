@@ -12,7 +12,10 @@
   <script language="javascript" type="text/javascript" src="Go.js"></script>
 
 </head>
-<div id="Input" style="height: 20px; width: 1100px;">
+<div id="Input" style="height: 20px; width: 1000px;">
+
+<label style="font-family:verdana"> LastFm Username <input type="text" id="UserName" size = "20" value = ""/></label>
+
 <label style="font-family:verdana"> Start Date <input type="text" id="StartDate" size = "7"
   value = ""/></label>
 
@@ -27,11 +30,16 @@
     .attr("value",Dates[1].format('YYYY-MM-DD'))
 </script>
 
-<label style="font-family:verdana; margin-left: 1cm"> LastFm User Name <input type="text" id="UserName" size = "20" value = ""/></label>
-
 <button type="button" onclick="Go()">Go</button>
 
 </div>
-<div id="ToolTip" style="height: 30px; width: 1100px;">
+<div id="ToolBar" style="height: 40px; width: 500px; margin-top: 10px;">
+
+  <label style="font-family:verdana"> Search <input type="text" id="SearchInput" size = "20" value = ""/></label>
+
+  <button type="button" onclick="Search()">Search</button>
+
+  <div id="ToolTip" style="height: 40px; width: 1000px; margin-top: 20px; text-align: center;"></div>
+
 </div>
 </html>

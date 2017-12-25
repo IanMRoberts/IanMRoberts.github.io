@@ -101,7 +101,7 @@ D3_BubbleGraph.prototype.Update = function (){
     // functions for tooltips and interaction
     .on("mouseover",MouseOver(this))
     .on("click", MouseClick(this))
-    .on("mouseleave", function(d) {d3.select(this).attr("r",RadiusScale(d.Value));} );
+    .on("mousemove",function(d) {d3.select(this).attr("r",RadiusScale(d.Value));});
 
     function MouseClick(GraphObj) {
      return function(d) {
@@ -199,3 +199,19 @@ d3.selection.prototype.moveToFront = function() {
     this.parentNode.appendChild(this);
   });
 };
+
+
+D3_BubbleGraph.prototype.Search = function (SearchTerm) {
+  d3.selectAll("circle")
+  .each(Compare(SearchTerm,this))
+  function Compare(SearchTerm,GraphObj) {
+    return function(d){
+      if (SearchTerm.toLowerCase() == d.Label.toLowerCase()){
+        d3.select(this)
+          .attr("r",dim/6).moveToFront();
+        ArtistSongs = SongPlayCount(d.Label,GraphObj.Tracks,0);
+        D3_barGraph(ArtistSongs,"PlayCount","SongName",GraphObj.BarGraphContainer);
+      }
+    }
+  }
+}
