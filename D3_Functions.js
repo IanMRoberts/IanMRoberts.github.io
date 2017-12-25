@@ -209,6 +209,7 @@ D3_BubbleGraph.prototype.Search = function (SearchTerm) {
       if (SearchTerm.toLowerCase() == d.Label.toLowerCase()){
         d3.select(this)
           .attr("r",dim/6).moveToFront();
+        GraphObj.BarGraph.text(d.Label);
         ArtistSongs = SongPlayCount(d.Label,GraphObj.Tracks,0);
         D3_barGraph(ArtistSongs,"PlayCount","SongName",GraphObj.BarGraphContainer);
       }
