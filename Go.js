@@ -41,26 +41,31 @@ function Go(){
   }
 }
 
-function Search() {
+function SearchUpdate(event) {
+  console.log(event)
   SearchTerm = document.getElementById("SearchInput").value;
 
-  temp = []; // list of all values that contain a match
-  for (i = 0; i < Graph.Elements.length; i++) {
-    if (Graph.Elements[i].Label.toLowerCase().indexOf(SearchTerm.toLowerCase()) > -1) {
-      temp.push(Graph.Elements[i]); // push Element if it has a match
+  if (!(typeof Graph === 'undefined')) {
+    temp = []; // list of all values that contain a match
+    for (i = 0; i < Graph.Elements.length; i++) {
+      if (Graph.Elements[i].Label.toLowerCase().indexOf(SearchTerm.toLowerCase()) > -1) {
+        temp.push(Graph.Elements[i]); // push Element if it has a match
+      }
+    }
+    // sort matches alphabetically
+    temp.sort(function(a,b){
+      var textA = a.Label.toLowerCase();
+      var textB = b.Label.toLowerCase();
+      if (textA.indexOf(SearchTerm.toLowerCase()) <= textB.indexOf(SearchTerm.toLowerCase())) {
+        return 0;
+      } else {
+        return 1;
+      }
+    })
+    BestMatch = temp[0];
+
+    if (event.key == "Enter" && temp.length > 0) {
+      Graph.Search(BestMatch.Label);
     }
   }
-  // sort matches alphabetically
-  temp.sort(function(a,b){
-    var textA = a.Label.toLowerCase();
-    var textB = b.Label.toLowerCase();
-    if (textA.indexOf(SearchTerm.toLowerCase()) <= textB.indexOf(SearchTerm.toLowerCase())) {
-      return 0;
-    } else {
-      return 1;
-    }
-  })
-  BestMatch = temp[0];
-  
-  Graph.Search(BestMatch.Label);
 }
