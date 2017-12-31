@@ -98,7 +98,7 @@ function GetImages(Artists,Size) {
     // define the callback function
     function callback(Artist){
       return function(data) {
-        if (typeof data.artist === 'undefined') {
+        if (typeof data.artist === 'undefined' || data.artist.image[Size]["#text"] == "") {
           Graph.AddData(Artist,"playcount","name",false);
           Graph.Update();
           Graph.Force();
@@ -114,7 +114,7 @@ function GetImages(Artists,Size) {
     };
 
     $.getJSON(rootURL + '?method=artist.getinfo' +"&artist="
-    + Artists[i].name + '&api_key=' + apiKey + '&format=json',callback(Artists[i]));
+    + Artists[i].name.replace(/&/g,"and") + '&api_key=' + apiKey + '&format=json',callback(Artists[i]));
   };
 };
 

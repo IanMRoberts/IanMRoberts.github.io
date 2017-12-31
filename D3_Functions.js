@@ -116,7 +116,6 @@ D3_BubbleGraph.prototype.Update = function (){
        GraphObj.BarGraph.text(d.Label);
        ArtistSongs = SongPlayCount(d.Label,GraphObj.Tracks,0);
        D3_barGraph(ArtistSongs,"PlayCount","SongName",GraphObj.BarGraphContainer)
-       console.log(d.ImageID)
       };
    };
    function MouseOver(GraphObj) {
@@ -185,7 +184,7 @@ function D3_barGraph(Data,ValueId,LableId,Container){
                       .attr("y",function(d,i){return WidthScale(i);})
                       .attr("height",WidthScale(0.9))
 
-                      .attr("fill","#e2e2e2");
+                      .attr("fill","#cc9da9");
 
     var text = canvas.selectAll("text")
                         .data(Data) // import the data into d3

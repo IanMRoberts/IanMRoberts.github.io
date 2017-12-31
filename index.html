@@ -1,3 +1,39 @@
+<style>
+button {
+  background-color: #cc9da9; /* Green */
+  border: none;
+  color: black;
+  padding: 10px 10px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 12px;
+}
+input {
+  background-color: #cc9da9; /* Green */
+  border: none;
+  color: black;
+  padding: 5px 5px;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 12px;
+}
+label {
+  background-color: #cc9da9; /* Green */
+  border: none;
+  color: black;
+  padding: 5px 5px;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 12px;
+}
+
+body {
+  background-color: #ffc1d1; /* Green */
+}
+
+</style>
+
 <html>
 <head>
 
@@ -32,14 +68,14 @@
 
 <button type="button" onclick="Go()">Go</button>
 
+<label style="font-family:verdana"> Search <input type="text" id="SearchInput" size = "20" value = ""/></label>
+
+<button type="button" onclick="Search()">Search</button>
+
 </div>
-<div id="ToolBar" style="height: 40px; width: 500px; margin-top: 10px;">
 
-  <label style="font-family:verdana"> Search <input type="text" id="SearchInput" size = "20" value = ""/></label>
-
-  <button type="button" onclick="Search()">Search</button>
-
+<div id="ToolBar" style="height: 40px; width: 500px; margin-top: 20px;">
   <div id="ToolTip" style="height: 40px; width: 1000px; margin-top: 20px; text-align: center;"></div>
-
 </div>
+
 </html>
