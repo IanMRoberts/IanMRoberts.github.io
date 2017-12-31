@@ -50,7 +50,7 @@ function D3_BubbleGraph(Container){
 D3_BubbleGraph.prototype.AddData = function (Data,ValueId,LableId,useImage) {
   // check if the data has an image associated with it
   if (useImage) {
-    ImageID = Data[LableId].toLowerCase().replace(/ /g,"-") // create the image ID
+    ImageID = Data[LableId].toLowerCase().replace(/ /g,"-").replace(/&/g,"and") // create the image ID
     // push the data to elements
     this.Elements.push({"Label":Data[LableId],"Value":Data[ValueId],"Url":Data.ImageUrl,"ImageID":ImageID});
     // create the image definition
