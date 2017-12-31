@@ -29,11 +29,12 @@ function getTracks(user,tracks,start,end,page) {
       getTracks(user,tracks,start,end,parseInt(attr.page)+1);
     }
   }
-  console.log(rootURL + '?method=user.getRecentTracks' + '&user=' + user
-  + '&limit=1000'+"&from="+start.unix()+"&to="+end.unix()+"&page=" + page + '&api_key=' + apiKey + '&format=json');
+  QueryString = rootURL + '?method=user.getRecentTracks' + '&user=' + user
+  + '&limit=1000'+"&from="+start.utc().unix()+"&to="+end.add(1, 'days').utc().unix()+"&page=" + page + '&api_key=' + apiKey + '&format=json';
+
+  console.log(QueryString);
   // the json query
-  $.getJSON(rootURL + '?method=user.getRecentTracks' + '&user=' + user
-  + '&limit=1000'+"&from="+start.unix()+"&to="+end.add(1, 'days').unix()+"&page=" + page + '&api_key=' + apiKey + '&format=json', callback);
+  $.getJSON(QueryString, callback);
 };
 
 function getWeek(WeekNumber) {
