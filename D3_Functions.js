@@ -97,7 +97,7 @@ D3_BubbleGraph.prototype.Update = function (){
     .attr("class","bubbles")
     .attr("r", function(d) {return RadiusScale(d.Value); } )
     .attr("fill",function(d) {
-      if (typeof d.Url === 'undefined') {
+      if (typeof d.ImageID === 'undefined') {
         return d.Color;
       } else {
         return "url(#" + d.ImageID + ")"
@@ -116,6 +116,7 @@ D3_BubbleGraph.prototype.Update = function (){
        GraphObj.BarGraph.text(d.Label);
        ArtistSongs = SongPlayCount(d.Label,GraphObj.Tracks,0);
        D3_barGraph(ArtistSongs,"PlayCount","SongName",GraphObj.BarGraphContainer)
+       console.log(d.ImageID)
       };
    };
    function MouseOver(GraphObj) {
