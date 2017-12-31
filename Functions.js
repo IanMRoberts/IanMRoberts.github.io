@@ -33,7 +33,7 @@ function getTracks(user,tracks,start,end,page) {
   + '&limit=1000'+"&from="+start.unix()+"&to="+end.unix()+"&page=" + page + '&api_key=' + apiKey + '&format=json');
   // the json query
   $.getJSON(rootURL + '?method=user.getRecentTracks' + '&user=' + user
-  + '&limit=1000'+"&from="+start.unix()+"&to="+end.unix()+"&page=" + page + '&api_key=' + apiKey + '&format=json', callback);
+  + '&limit=1000'+"&from="+start.unix()+"&to="+end.add(1, 'days').unix()+"&page=" + page + '&api_key=' + apiKey + '&format=json', callback);
 };
 
 function getWeek(WeekNumber) {
