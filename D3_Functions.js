@@ -3,7 +3,7 @@ function D3_BubbleGraph(Container){
   // graph properties
   this.Width = document.getElementById(Container.replace("#","")).offsetWidth; // width of svg
   this.Height = document.getElementById(Container.replace("#","")).offsetHeight; // height of svg
-  this.SinkStrength = 0.02; // strength of the force pulling the bubbles to the center
+  this.SinkStrength = 0.075; // strength of the force pulling the bubbles to the center
   this.Elements = []; // where the data is stored
   this.maxRadius = 30 // maixmum radius of bubbles
   this.minRadius = 0.25 // minimum rdiues is equal to this * maxRadius
@@ -16,7 +16,7 @@ function D3_BubbleGraph(Container){
   // the d3 force simulation
   this.simulation = d3.forceSimulation(this.Elements)
     // the forces puuling the bubbles to the center
-    .force("xSink",d3.forceX(this.Width/2).strength(this.SinkStrength*this.Height/this.Width))
+    .force("xSink",d3.forceX(this.Width/2).strength(this.SinkStrength))
     .force("ySink",d3.forceY(this.Height/2).strength(this.SinkStrength*this.Width/this.Height));
 
   // create the SGV container
@@ -134,7 +134,7 @@ D3_BubbleGraph.prototype.Force = function () {
   this.Bubbles = this.svg.selectAll(".bubbles")
   // force peramaters
   this.simulation.stop();
-  this.simulation.nodes(this.Elements).on("tick",ticked(this.Bubbles)).alpha(1).restart()
+  this.simulation.nodes(this.Elements).on("tick",ticked(this.Bubbles)).alpha(.25).restart()
     .force("collide",d3.forceCollide(function(d) {return RadiusScale(d.Value)+3;}));
 
   function ticked(Bubbles) {
