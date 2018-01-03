@@ -47,6 +47,9 @@ function ArtistPlayCount(tracks) {
     this.name = Name;
     this.playcount = 1;
     this.ImageUrl = "";
+    this.tags = [];
+    this.listeners = -1;
+    this.onTour = -1;
   };
 
   var artistStats = [];
@@ -106,16 +109,21 @@ function GetImages(Artists,Size) {
         } else {
           Artist.ImageUrl = data.artist.image[Size]["#text"];
           Artist.mbid = data.artist.mbid;
-
+          Artist.listeners = data.artist.stats.listeners;
+          Artist.onTour = data.artist.ontour;
+          for (i = 0; i < data.artist.tags.tag.length; i++){
+            Artist.tags.push(data.artist.tags.tag[i].name);
+          }
           Graph.AddData(Artist,"playcount","name",true);
           Graph.Update();
           Graph.Force();
         };
       };
     };
-
-    $.getJSON(rootURL + '?method=artist.getinfo' +"&artist="
-    + Artists[i].name.replace(/&/g,"and") + '&api_key=' + apiKey + '&format=json',callback(Artists[i]));
+    QueryString = rootURL + '?method=artist.getinfo' +"&artist="
+    + Artists[i].name.replace(/&/g,"and") + '&api_key=' + apiKey + '&format=json';
+    //console.log(QueryString);
+    $.getJSON(QueryString,callback(Artists[i]));
   };
 };
 

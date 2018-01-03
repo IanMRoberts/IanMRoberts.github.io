@@ -52,7 +52,7 @@ D3_BubbleGraph.prototype.AddData = function (Data,ValueId,LableId,useImage) {
   if (useImage) {
     ImageID = Data[LableId].toLowerCase().replace(/ /g,"-").replace(/&/g,"and") // create the image ID
     // push the data to elements
-    this.Elements.push({"Label":Data[LableId],"Value":Data[ValueId],"Url":Data.ImageUrl,"ImageID":ImageID});
+    this.Elements.push({"Label":Data[LableId],"Value":Data[ValueId],"Url":Data.ImageUrl,"ImageID":ImageID,"all":Data});
     // create the image definition
     this.defs
       .append("pattern")
@@ -66,7 +66,7 @@ D3_BubbleGraph.prototype.AddData = function (Data,ValueId,LableId,useImage) {
   } else {
     // if no image assign a color and push the data to elements
     color = '#'+(Math.random()*0xFFFFFF<<0).toString(16)
-    this.Elements.push({"Label":Data[LableId],"Value":Data[ValueId],"Color":color});
+    this.Elements.push({"Label":Data[LableId],"Value":Data[ValueId],"Color":color,"all":Data});
   };
 };
 
@@ -112,6 +112,7 @@ D3_BubbleGraph.prototype.Update = function (){
 
     function MouseClick(GraphObj) {
      return function(d) {
+       console.log(d);
        d3.select(this).attr("r",dim/6).moveToFront();
        GraphObj.BarGraph.text(d.Label);
        ArtistSongs = SongPlayCount(d.Label,GraphObj.Tracks,0);
