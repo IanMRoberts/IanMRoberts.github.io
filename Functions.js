@@ -102,11 +102,11 @@ function GetImages(Artists,Size) {
     // define the callback function
     function callback(Artist){
       return function(data) {
-        //if (typeof data.artist === 'undefined' || data.artist.image[Size]["#text"] == "") {
+        if (typeof data.artist === 'undefined' || data.artist.image[Size]["#text"] == "" || true) {
           Graph.AddData(Artist,"playcount","name",false);
           Graph.Update();
           Graph.Force();
-        } /*else {
+        } else {
           //Artist.ImageUrl = data.artist.image[Size]["#text"];
           Artist.mbid = data.artist.mbid;
           Artist.listeners = data.artist.stats.listeners;
@@ -140,7 +140,7 @@ function GetImages(Artists,Size) {
           
           for (i = 0; i < data.artist.tags.tag.length; i++){
             Artist.tags.push(data.artist.tags.tag[i].name);
-          }*/
+          }
           Graph.AddData(Artist,"playcount","name",true);
           Graph.Update();
           Graph.Force();
