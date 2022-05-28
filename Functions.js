@@ -102,16 +102,15 @@ function GetImages(Artists,Size) {
     // define the callback function
     function callback(Artist){
       return function(data) {
-        if (typeof data.artist === 'undefined' || data.artist.image[Size]["#text"] == "" || true) {
+        if (typeof data.artist === 'undefined' || data.artist.image[Size]["#text"] == "") {
           Graph.AddData(Artist,"playcount","name",false);
           Graph.Update();
           Graph.Force();
         } else {
+          Artist.ImageUrl = data.artist.image[Size]["#text"];
           Artist.mbid = data.artist.mbid;
           Artist.listeners = data.artist.stats.listeners;
           Artist.onTour = data.artist.ontour;
-          //Artist.ImageUrl = 'https://musicbrainz.org/ws/2/artist/' + Artist.mbid + '?inc=url-rels&fmt=json';
-          
           for (i = 0; i < data.artist.tags.tag.length; i++){
             Artist.tags.push(data.artist.tags.tag[i].name);
           }
