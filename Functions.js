@@ -102,7 +102,7 @@ function GetImages(Artists,Size) {
     // define the callback function
     function callback(Artist){
       return function(data) {
-        if (typeof data.artist === 'undefined' || data.artist.image[Size]["#text"] == "" || true) {
+        if (typeof data.artist === 'undefined' || data.artist.image[Size]["#text"] == "") {
           Graph.AddData(Artist,"playcount","name",false);
           Graph.Update();
           Graph.Force();
