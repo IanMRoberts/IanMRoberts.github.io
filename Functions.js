@@ -102,12 +102,12 @@ function GetImages(Artists,Size) {
     // define the callback function
     function callback(Artist){
       return function(data) {
-        if (typeof data.artist === 'undefined' || data.artist.image[Size]["#text"] == "") {
+        if (typeof data.artist === 'undefined' || data.artist.image[Size]["#text"] == "" || true) {
           Graph.AddData(Artist,"playcount","name",false);
           Graph.Update();
           Graph.Force();
         } else {
-          Artist.ImageUrl = data.artist.image[Size]["#text"];
+          //Artist.ImageUrl = data.artist.image[Size]["#text"];
           Artist.mbid = data.artist.mbid;
           Artist.listeners = data.artist.stats.listeners;
           Artist.onTour = data.artist.ontour;
