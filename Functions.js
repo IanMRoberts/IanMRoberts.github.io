@@ -110,7 +110,7 @@ function GetImages(Artists,Size) {
           Artist.mbid = data.artist.mbid;
           Artist.listeners = data.artist.stats.listeners;
           Artist.onTour = data.artist.ontour;
-          Artist.ImageUrl = 'https://musicbrainz.org/ws/2/artist/' + Artist.mbid + '?inc=url-rels&fmt=json';
+          //Artist.ImageUrl = 'https://musicbrainz.org/ws/2/artist/' + Artist.mbid + '?inc=url-rels&fmt=json';
           
           for (i = 0; i < data.artist.tags.tag.length; i++){
             Artist.tags.push(data.artist.tags.tag[i].name);
