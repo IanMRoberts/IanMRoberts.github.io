@@ -140,11 +140,11 @@ function GetImages(Artists,Size) {
           
           for (i = 0; i < data.artist.tags.tag.length; i++){
             Artist.tags.push(data.artist.tags.tag[i].name);
-          }
+          }*/
           Graph.AddData(Artist,"playcount","name",true);
           Graph.Update();
           Graph.Force();
-        };*/
+        };
       };
     };
     QueryString = rootURL + '?method=artist.getinfo' +"&artist="
