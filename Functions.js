@@ -107,35 +107,10 @@ function GetImages(Artists,Size) {
           Graph.Update();
           Graph.Force();
         } else {
-          //Artist.ImageUrl = data.artist.image[Size]["#text"];
+          Artist.ImageUrl = 'https://musicbrainz.org/ws/2/artist/' + Artist.mbid + '?inc=url-rels&fmt=json';
           Artist.mbid = data.artist.mbid;
           Artist.listeners = data.artist.stats.listeners;
           Artist.onTour = data.artist.ontour;
-          
-          
-          if (Artist.mbid) {
-             const url = 'https://musicbrainz.org/ws/2/artist/' + Artist.mbid + '?inc=url-rels&fmt=json';
-             console.log(url);
-              fetch(url)
-                  .then(res => res.json())
-                  .then((out) => {
-                      const relations = out.relations;
-                      console.table(relations);
-                      // Find image relation
-                      for (let i = 0; i < relations.length; i++) {
-                          if (relations[i].type === 'image') {
-                              let image_url = relations[i].url.resource;
-                              if (image_url.startsWith('https://commons.wikimedia.org/wiki/File:')) {
-                                  const filename = image_url.substring(image_url.lastIndexOf('/') + 1);
-                                  Artist.ImageUrl = 'https://commons.wikimedia.org/wiki/Special:Redirect/file/' + filename;
-                              }
-                              console.log(image_url);
-                              success(image_url);
-                          }
-                      }
-                  })
-                  .catch(err => { throw console.log(err) });
-          
           
           
           for (i = 0; i < data.artist.tags.tag.length; i++){
