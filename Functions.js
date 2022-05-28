@@ -106,7 +106,7 @@ function GetImages(Artists,Size) {
           Graph.AddData(Artist,"playcount","name",false);
           Graph.Update();
           Graph.Force();
-        /*} else {
+        } /*else {
           //Artist.ImageUrl = data.artist.image[Size]["#text"];
           Artist.mbid = data.artist.mbid;
           Artist.listeners = data.artist.stats.listeners;
@@ -144,7 +144,7 @@ function GetImages(Artists,Size) {
           Graph.AddData(Artist,"playcount","name",true);
           Graph.Update();
           Graph.Force();
-        }; */
+        };*/
       };
     };
     QueryString = rootURL + '?method=artist.getinfo' +"&artist="
