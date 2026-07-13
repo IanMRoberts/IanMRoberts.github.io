@@ -57,6 +57,8 @@ const slides = media.map((item) => {
 						<video
 							src={item.src}
 							controls
+							muted
+							playsinline
 							preload="metadata"
 							aria-label={item.alt}
 							class="size-full object-contain object-center"
@@ -231,6 +233,8 @@ const slides = media.map((item) => {
 						if (entry.isIntersecting) {
 							const index = slides.indexOf(entry.target as HTMLElement);
 							if (index !== -1) setActiveDot(index);
+							const video = entry.target.querySelector("video");
+							video?.play().catch(() => {});
 						} else {
 							entry.target.querySelector("video")?.pause();
 						}

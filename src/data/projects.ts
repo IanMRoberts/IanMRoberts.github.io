@@ -36,7 +36,7 @@ export const projects: Project[] = [
 		year: "2026",
 		title: "Rocking Horse",
 		description: "A cherry and maple rocking horse.",
-		category: "Woodworking",
+		category: "Woodworking and CAD/CAM",
 		media: [
 			{ file: "Horse1.png", alt: "A cherry and maple rocking horse." },
 			{ file: "HorseCad.png", alt: "CAD model." }
@@ -44,9 +44,19 @@ export const projects: Project[] = [
 	},
 	{
 		year: "2026",
+		title: "Lidar Scanner",
+		description: "Rotating mount for a VLP-16 lidar sensor to create highly detailed 360 degree scans.",
+		category: "Hardware and software",
+		media: [
+			{ file: "LidarRender.jpg", alt: "Lidar point cloud rendered in Blender." },
+			{ type: "video",file: "Lidar (1).mp4", alt: "Lidar Scanning.", width: 720, height: 480 },
+		],
+	},
+	{
+		year: "2026",
 		title: "Guitar Stands",
 		description: "Maple guitar stands.",
-		category: "Woodworking",
+		category: "Woodworking and CAD/CAM",
 		media: [
 			{ file: "GuitarStands.png", alt: "A pair of maple guitar stands." },
 			{ file: "GuitarStandStiching.png", alt: "Hand stitched leather." },
