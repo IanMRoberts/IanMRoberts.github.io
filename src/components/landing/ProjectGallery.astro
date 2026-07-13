@@ -1,0 +1,166 @@
+---
+import { Image } from "astro:assets";
+
+interface Props {
+	images: { src: ImageMetadata; alt: string }[];
+	title: string;
+}
+
+const { images, title } = Astro.props;
+
+// The gallery's height tracks the first image's aspect ratio; other slides
+// are letterboxed (never cropped) via object-contain if their ratio differs.
+const containerRatio = `${images[0].src.width} / ${images[0].src.height}`;
+const maxWidth = 1600;
+
+const slides = images.map((image) => {
+	const scale = Math.min(1, maxWidth / image.src.width);
+	return {
+		...image,
+		width: Math.round(image.src.width * scale),
+		height: Math.round(image.src.height * scale),
+	};
+});
+---
+
+<div class="gallery relative mt-4" data-gallery style={`aspect-ratio: ${containerRatio}`}>
+	<div
+		class="gallery-track flex h-full overflow-x-auto scroll-smooth snap-x snap-mandatory scrollbar-hide rounded-4xl"
+		data-track
+	>
+		{
+			slides.map((image, index) => (
+				<div class="w-full h-full shrink-0 snap-start" data-slide>
+					<Image
+						width={image.width}
+						height={image.height}
+						src={image.src}
+						alt={image.alt}
+						loading={index === 0 ? "eager" : "lazy"}
+						decoding="async"
+						class="size-full object-contain object-center"
+					/>
+				</div>
+			))
+		}
+	</div>
+
+	{
+		images.length > 1 && (
+			<>
+				<button
+					type="button"
+					class="absolute top-1/2 left-4 -translate-y-1/2 flex items-center justify-center size-10 rounded-full bg-base-950/60 text-white hover:bg-base-950/80 transition-colors"
+					aria-label={`Previous image in ${title}`}
+					data-prev
+				>
+					<svg
+						xmlns="http://www.w3.org/2000/svg"
+						viewBox="0 0 24 24"
+						fill="none"
+						stroke="currentColor"
+						stroke-width="2"
+						stroke-linecap="round"
+						stroke-linejoin="round"
+						class="size-5"
+					>
+						<path d="m15 18-6-6 6-6" />
+					</svg>
+				</button>
+				<button
+					type="button"
+					class="absolute top-1/2 right-4 -translate-y-1/2 flex items-center justify-center size-10 rounded-full bg-base-950/60 text-white hover:bg-base-950/80 transition-colors"
+					aria-label={`Next image in ${title}`}
+					data-next
+				>
+					<svg
+						xmlns="http://www.w3.org/2000/svg"
+						viewBox="0 0 24 24"
+						fill="none"
+						stroke="currentColor"
+						stroke-width="2"
+						stroke-linecap="round"
+						stroke-linejoin="round"
+						class="size-5"
+					>
+						<path d="m9 18 6-6-6-6" />
+					</svg>
+				</button>
+				<div class="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2">
+					{images.map((_, index) => (
+						<button
+							type="button"
+							class="size-2 rounded-full bg-white/50 data-[active=true]:bg-white transition-colors"
+							aria-label={`Go to image ${index + 1} of ${images.length} in ${title}`}
+							data-dot
+							data-index={index}
+						/>
+					))}
+				</div>
+			</>
+		)
+	}
+</div>
+
+<script>
+	function initGalleries() {
+		document.querySelectorAll<HTMLElement>("[data-gallery]").forEach((gallery) => {
+			if (gallery.dataset.initialized) return;
+			gallery.dataset.initialized = "true";
+
+			const track = gallery.querySelector<HTMLElement>("[data-track]");
+			const slides = Array.from(gallery.querySelectorAll<HTMLElement>("[data-slide]"));
+			const prevButton = gallery.querySelector<HTMLButtonElement>("[data-prev]");
+			const nextButton = gallery.querySelector<HTMLButtonElement>("[data-next]");
+			const dots = Array.from(gallery.querySelectorAll<HTMLButtonElement>("[data-dot]"));
+			if (!track || slides.length === 0) return;
+
+			const setActiveDot = (index: number) => {
+				dots.forEach((dot, dotIndex) => {
+					dot.dataset.active = String(dotIndex === index);
+				});
+			};
+
+			const scrollToIndex = (index: number) => {
+				const slide = slides[index];
+				if (slide) track.scrollTo({ left: slide.offsetLeft, behavior: "smooth" });
+			};
+
+			prevButton?.addEventListener("click", () => {
+				const currentIndex = slides.findIndex(
+					(slide) => Math.abs(slide.offsetLeft - track.scrollLeft) < track.clientWidth / 2,
+				);
+				scrollToIndex(Math.max(currentIndex - 1, 0));
+			});
+
+			nextButton?.addEventListener("click", () => {
+				const currentIndex = slides.findIndex(
+					(slide) => Math.abs(slide.offsetLeft - track.scrollLeft) < track.clientWidth / 2,
+				);
+				scrollToIndex(Math.min(currentIndex + 1, slides.length - 1));
+			});
+
+			dots.forEach((dot, index) => {
+				dot.addEventListener("click", () => scrollToIndex(index));
+			});
+
+			const observer = new IntersectionObserver(
+				(entries) => {
+					entries.forEach((entry) => {
+						if (entry.isIntersecting) {
+							const index = slides.indexOf(entry.target as HTMLElement);
+							if (index !== -1) setActiveDot(index);
+						}
+					});
+				},
+				{ root: track, threshold: 0.6 },
+			);
+			slides.forEach((slide) => observer.observe(slide));
+
+			setActiveDot(0);
+		});
+	}
+
+	initGalleries();
+	document.addEventListener("astro:page-load", initGalleries);
+</script>
