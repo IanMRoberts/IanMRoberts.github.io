@@ -1,24 +1,46 @@
 ---
 import { Image } from "astro:assets";
 
+interface ImageSlide {
+	type: "image";
+	src: ImageMetadata;
+	alt: string;
+}
+
+interface VideoSlide {
+	type: "video";
+	src: string;
+	alt: string;
+	width: number;
+	height: number;
+}
+
+type Slide = ImageSlide | VideoSlide;
+
 interface Props {
-	images: { src: ImageMetadata; alt: string }[];
+	media: Slide[];
 	title: string;
 }
 
-const { images, title } = Astro.props;
+const { media, title } = Astro.props;
 
-// The gallery's height tracks the first image's aspect ratio; other slides
+// The gallery's height tracks the first item's aspect ratio; other slides
 // are letterboxed (never cropped) via object-contain if their ratio differs.
-const containerRatio = `${images[0].src.width} / ${images[0].src.height}`;
+const first = media[0];
+const firstDimensions =
+	first.type === "image"
+		? { width: first.src.width, height: first.src.height }
+		: { width: first.width, height: first.height };
+const containerRatio = `${firstDimensions.width} / ${firstDimensions.height}`;
 const maxWidth = 1600;
 
-const slides = images.map((image) => {
-	const scale = Math.min(1, maxWidth / image.src.width);
+const slides = media.map((item) => {
+	if (item.type === "video") return item;
+	const scale = Math.min(1, maxWidth / item.src.width);
 	return {
-		...image,
-		width: Math.round(image.src.width * scale),
-		height: Math.round(image.src.height * scale),
+		...item,
+		width: Math.round(item.src.width * scale),
+		height: Math.round(item.src.height * scale),
 	};
 });
 ---
@@ -29,24 +51,36 @@ const slides = images.map((image) => {
 		data-track
 	>
 		{
-			slides.map((image, index) => (
-				<div class="w-full h-full shrink-0 snap-start" data-slide>
-					<Image
-						width={image.width}
-						height={image.height}
-						src={image.src}
-						alt={image.alt}
-						loading={index === 0 ? "eager" : "lazy"}
-						decoding="async"
-						class="size-full object-contain object-center"
-					/>
-				</div>
-			))
+			slides.map((item, index) =>
+				item.type === "video" ? (
+					<div class="w-full h-full shrink-0 snap-start" data-slide>
+						<video
+							src={item.src}
+							controls
+							preload="metadata"
+							aria-label={item.alt}
+							class="size-full object-contain object-center"
+						/>
+					</div>
+				) : (
+					<div class="w-full h-full shrink-0 snap-start" data-slide>
+						<Image
+							width={item.width}
+							height={item.height}
+							src={item.src}
+							alt={item.alt}
+							loading={index === 0 ? "eager" : "lazy"}
+							decoding="async"
+							class="size-full object-contain object-center"
+						/>
+					</div>
+				),
+			)
 		}
 	</div>
 
 	{
-		images.length > 1 && (
+		media.length > 1 && (
 			<>
 				<button
 					type="button"
@@ -87,11 +121,11 @@ const slides = images.map((image) => {
 					</svg>
 				</button>
 				<div class="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2">
-					{images.map((_, index) => (
+					{media.map((_, index) => (
 						<button
 							type="button"
 							class="size-2 rounded-full bg-white/50 data-[active=true]:bg-white transition-colors"
-							aria-label={`Go to image ${index + 1} of ${images.length} in ${title}`}
+							aria-label={`Go to item ${index + 1} of ${media.length} in ${title}`}
 							data-dot
 							data-index={index}
 						/>
@@ -121,28 +155,75 @@ const slides = images.map((image) => {
 				});
 			};
 
-			const scrollToIndex = (index: number) => {
+			const scrollToIndex = (index: number, behavior: ScrollBehavior = "smooth") => {
 				const slide = slides[index];
-				if (slide) track.scrollTo({ left: slide.offsetLeft, behavior: "smooth" });
+				if (slide) track.scrollTo({ left: slide.offsetLeft, behavior });
+			};
+
+			const getCurrentIndex = () =>
+				slides.findIndex(
+					(slide) => Math.abs(slide.offsetLeft - track.scrollLeft) < track.clientWidth / 2,
+				);
+
+			const autoplayMs = 5000;
+			let autoplayId: number | undefined;
+
+			const stopAutoplay = () => {
+				if (autoplayId !== undefined) {
+					window.clearInterval(autoplayId);
+					autoplayId = undefined;
+				}
+			};
+
+			const startAutoplay = () => {
+				if (slides.length <= 1) return;
+				stopAutoplay();
+				autoplayId = window.setInterval(() => {
+					scrollToIndex((getCurrentIndex() + 1) % slides.length);
+				}, autoplayMs);
 			};
 
 			prevButton?.addEventListener("click", () => {
-				const currentIndex = slides.findIndex(
-					(slide) => Math.abs(slide.offsetLeft - track.scrollLeft) < track.clientWidth / 2,
-				);
-				scrollToIndex(Math.max(currentIndex - 1, 0));
+				scrollToIndex(Math.max(getCurrentIndex() - 1, 0));
+				startAutoplay();
 			});
 
 			nextButton?.addEventListener("click", () => {
-				const currentIndex = slides.findIndex(
-					(slide) => Math.abs(slide.offsetLeft - track.scrollLeft) < track.clientWidth / 2,
-				);
-				scrollToIndex(Math.min(currentIndex + 1, slides.length - 1));
+				scrollToIndex(Math.min(getCurrentIndex() + 1, slides.length - 1));
+				startAutoplay();
 			});
 
 			dots.forEach((dot, index) => {
-				dot.addEventListener("click", () => scrollToIndex(index));
+				dot.addEventListener("click", () => {
+					scrollToIndex(index);
+					startAutoplay();
+				});
 			});
+
+			gallery.addEventListener("mouseenter", stopAutoplay);
+			gallery.addEventListener("mouseleave", startAutoplay);
+			gallery.querySelectorAll("video").forEach((video) => {
+				video.addEventListener("play", stopAutoplay);
+				video.addEventListener("pause", startAutoplay);
+				video.addEventListener("ended", startAutoplay);
+			});
+
+			// Only autoplay while the gallery is on screen; reset to the first
+			// slide once it scrolls out of view.
+			const visibilityObserver = new IntersectionObserver(
+				([entry]) => {
+					if (entry.isIntersecting) {
+						startAutoplay();
+					} else {
+						stopAutoplay();
+						scrollToIndex(0, "instant");
+						setActiveDot(0);
+						gallery.querySelectorAll("video").forEach((video) => video.pause());
+					}
+				},
+				{ threshold: 0.4 },
+			);
+			visibilityObserver.observe(gallery);
 
 			const observer = new IntersectionObserver(
 				(entries) => {
@@ -150,6 +231,8 @@ const slides = images.map((image) => {
 						if (entry.isIntersecting) {
 							const index = slides.indexOf(entry.target as HTMLElement);
 							if (index !== -1) setActiveDot(index);
+						} else {
+							entry.target.querySelector("video")?.pause();
 						}
 					});
 				},

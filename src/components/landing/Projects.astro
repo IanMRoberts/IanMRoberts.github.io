@@ -11,6 +11,10 @@ const imageFiles = import.meta.glob<{ default: ImageMetadata }>(
   "/src/images/projects/*.{png,jpg,jpeg,webp,avif}",
   { eager: true },
 );
+const videoFiles = import.meta.glob<{ default: string }>(
+  "/src/images/projects/*.{mp4,webm,mov}",
+  { eager: true },
+);
 ---
 
 <section class="scroll-mt-32" id="projects">
@@ -18,12 +22,24 @@ const imageFiles = import.meta.glob<{ default: ImageMetadata }>(
     <div class="flex flex-col gap-12">
       {
         projects.map((project) => {
-          const galleryImages = project.images
-            .map((image) => {
-              const file = imageFiles[`/src/images/projects/${image.file}`];
-              return file && { src: file.default, alt: image.alt };
+          const galleryMedia = project.media
+            .map((item) => {
+              if (item.type === "video") {
+                const src = videoFiles[`/src/images/projects/${item.file}`];
+                return (
+                  src && {
+                    type: "video" as const,
+                    src: src.default,
+                    alt: item.alt,
+                    width: item.width ?? 16,
+                    height: item.height ?? 9,
+                  }
+                );
+              }
+              const file = imageFiles[`/src/images/projects/${item.file}`];
+              return file && { type: "image" as const, src: file.default, alt: item.alt };
             })
-            .filter((image) => image !== undefined);
+            .filter((item) => item !== undefined);
           return (
             <article class="py-12 border-t border-base-200 dark:border-base-800">
               <div class="grid grid-cols-1 gap-4 lg:grid-cols-4 items-start">
@@ -49,8 +65,8 @@ const imageFiles = import.meta.glob<{ default: ImageMetadata }>(
                   {project.description}
                 </Text>
               </div>
-              {galleryImages.length > 0 && (
-                <ProjectGallery images={galleryImages} title={project.title} />
+              {galleryMedia.length > 0 && (
+                <ProjectGallery media={galleryMedia} title={project.title} />
               )}
             </article>
           );
