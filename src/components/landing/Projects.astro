@@ -14,8 +14,8 @@ const imageFiles = import.meta.glob<{ default: ImageMetadata }>(
 ---
 
 <section class="scroll-mt-32" id="projects">
-  <Wrapper variant="standard" class="py-8 lg:py-16">
-    <div class="flex flex-col gap-8">
+  <Wrapper variant="standard" class="py-12 lg:py-24">
+    <div class="flex flex-col gap-12">
       {
         projects.map((project) => {
           const galleryImages = project.images
@@ -25,7 +25,7 @@ const imageFiles = import.meta.glob<{ default: ImageMetadata }>(
             })
             .filter((image) => image !== undefined);
           return (
-            <article class="py-6 border-t border-base-200 dark:border-base-800">
+            <article class="py-12 border-t border-base-200 dark:border-base-800">
               <div class="grid grid-cols-1 gap-4 lg:grid-cols-4 items-start">
                 <Text
                   tag="p"
